@@ -1,0 +1,31 @@
+name: Bug Report
+description: Report a bug in zer0dex
+labels: ["bug"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: What happened? What did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Minimal code or steps to reproduce the issue
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: "Output of: pip show zer0dex"
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Python Version
+    validations:
+      required: true

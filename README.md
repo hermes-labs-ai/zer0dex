@@ -5,6 +5,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/roli-lpci/zer0dex)](https://github.com/roli-lpci/zer0dex)
 [![License](https://img.shields.io/pypi/l/zer0dex)](https://github.com/roli-lpci/zer0dex/blob/main/LICENSE)
 [![Python](https://img.shields.io/pypi/pyversions/zer0dex)](https://pypi.org/project/zer0dex/)
+[![CI](https://github.com/roli-lpci/zer0dex/actions/workflows/ci.yml/badge.svg)](https://github.com/roli-lpci/zer0dex/actions/workflows/ci.yml)
 
 **A token-efficient memory architecture for persistent AI agents.**
 
@@ -195,6 +196,21 @@ See [eval/README.md](eval/README.md) for methodology and detailed results.
 | Auto-retrieval | No | On-demand | LLM-managed | **Every message** |
 
 *MemGPT recall estimated; no published head-to-head comparison available.
+
+## Hermes Labs Ecosystem
+
+zer0dex is part of the [Hermes Labs](https://hermes-labs.ai) open-source suite:
+
+- [**little-canary**](https://github.com/roli-lpci/little-canary) — Prompt injection detection
+- [**lintlang**](https://github.com/roli-lpci/lintlang) — Static linter for AI agent configs
+- [**forgetted**](https://github.com/roli-lpci/forgetted) — Selective memory governance
+- [**zer0lint**](https://github.com/roli-lpci/zer0lint) — mem0 extraction diagnostics
+- [**suy-sideguy**](https://github.com/roli-lpci/suy-sideguy) — Autonomous agent watchdog
+- [**quickthink**](https://github.com/roli-lpci/quickthink) — Planning scaffolding for local LLMs
+
+---
+
+If zer0dex is useful to you, please [star the repo](https://github.com/roli-lpci/zer0dex) — it helps others find it.
 
 ## Citation
 
