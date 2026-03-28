@@ -29,6 +29,7 @@ Homepage = "https://github.com/roli-lpci/zer0dex"
 Documentation = "https://hermes-labs.ai/zer0dex"
 Repository = "https://github.com/roli-lpci/zer0dex"
 Issues = "https://github.com/roli-lpci/zer0dex/issues"
+Changelog = "https://github.com/roli-lpci/zer0dex/blob/main/CHANGELOG.md"
 
 [project.scripts]
 zer0dex = "zer0dex.cli:main"

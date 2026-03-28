@@ -1,5 +1,11 @@
 # zer0dex
 
+[![PyPI version](https://img.shields.io/pypi/v/zer0dex)](https://pypi.org/project/zer0dex/)
+[![PyPI downloads](https://img.shields.io/pypi/dm/zer0dex)](https://pypi.org/project/zer0dex/)
+[![GitHub stars](https://img.shields.io/github/stars/roli-lpci/zer0dex)](https://github.com/roli-lpci/zer0dex)
+[![License](https://img.shields.io/pypi/l/zer0dex)](https://github.com/roli-lpci/zer0dex/blob/main/LICENSE)
+[![Python](https://img.shields.io/pypi/pyversions/zer0dex)](https://pypi.org/project/zer0dex/)
+
 **A token-efficient memory architecture for persistent AI agents.**
 
 zer0dex combines a compressed human-readable index with a local vector store to give AI agents long-term memory that outperforms both flat files and traditional RAG.
