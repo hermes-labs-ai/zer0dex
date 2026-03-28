@@ -16,7 +16,7 @@ Stack: Python 3.11+, mem0ai, chromadb, ollama (nomic-embed-text + mistral:7b). F
 
 ## Code
 - [Memory Server](src/zer0dex/server.py): HTTP server for memory queries (GET /health, POST /query, POST /add)
-- [CLI](src/zer0dex/cli.py): Command-line interface (init, seed, serve, query, status, add)
+- [CLI](src/zer0dex/cli.py): Command-line interface (check, init, seed, serve, query, status, add)
 - [Seeder](src/zer0dex/seed.py): Seeds markdown files into the vector store
 - [Hook Example](src/zer0dex/hook_example.ts): TypeScript integration pattern for agent frameworks
 

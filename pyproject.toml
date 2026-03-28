@@ -1,6 +1,6 @@
 [project]
 name = "zer0dex"
-version = "0.0.8"
+version = "0.0.9"
 description = "Dual-layer memory for AI agents. Compressed index + vector store. 91% recall, 70ms, $0/month."
 readme = "README.md"
 license = "Apache-2.0"
@@ -20,6 +20,9 @@ dependencies = [
     "mem0ai>=0.1.0",
     "chromadb>=1.0.0",
 ]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
 
 [project.urls]
 Homepage = "https://github.com/roli-lpci/zer0dex"

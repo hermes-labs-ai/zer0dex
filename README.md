@@ -77,12 +77,10 @@ The compressed index solves the **cross-reference problem**. When a user asks "H
 ### Install
 
 ```bash
-pip install mem0ai chromadb
+pip install zer0dex
 
-# Pull embedding model
+# Pull embedding + extraction models
 ollama pull nomic-embed-text
-
-# Pull extraction model
 ollama pull mistral:7b
 ```
 
@@ -103,16 +101,18 @@ Create a `MEMORY.md` file — a compressed summary of what your agent knows:
 - Topics in mem0: ProjectX, NLP, deadlines
 ```
 
-### 2. Seed the Vector Store
+### 2. Initialize and Seed
 
 ```bash
-python zer0dex/seed.py --source MEMORY.md --source memory/
+zer0dex init
+zer0dex check          # validate Ollama, models, deps
+zer0dex seed --source MEMORY.md --source memory/
 ```
 
 ### 3. Start the Memory Server
 
 ```bash
-python zer0dex/server.py --port 18420
+zer0dex serve
 ```
 
 ### 4. Integrate with Your Agent

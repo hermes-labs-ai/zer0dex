@@ -22,7 +22,7 @@ src/zer0dex/
   __init__.py      — Package init, version
   server.py        — HTTP memory server (POST /query, POST /add, GET /health)
   seed.py          — Markdown → vector store seeder
-  cli.py           — CLI entry point (init/seed/serve/query/status/add)
+  cli.py           — CLI entry point (check/init/seed/serve/query/status/add)
   hook_example.ts  — TypeScript integration example
 eval/
   evaluate.py      — Full benchmark suite (n=97)

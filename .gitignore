@@ -4,6 +4,8 @@ __pycache__/
 *.pyc
 .env
 *.key
+build/
 dist/
 *.egg-info/
+.pytest_cache/
 AGENT-OPTIMIZATION-CHECKLIST.md

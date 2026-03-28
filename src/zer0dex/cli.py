@@ -116,6 +116,57 @@ def cmd_seed(args):
     print(f"\n✅ Seeded {total} memories. Total in store: {final}")
 
 
+def cmd_check(args):
+    """Validate prerequisites before init or seed."""
+    config = load_config()
+    ollama_url = config.get("ollama_url", DEFAULT_OLLAMA_URL)
+    llm_model = config.get("llm_model", DEFAULT_LLM_MODEL)
+    embed_model = config.get("embed_model", DEFAULT_EMBED_MODEL)
+    all_ok = True
+
+    # 1. Ollama running
+    try:
+        resp = urllib.request.urlopen(f"{ollama_url}/api/tags", timeout=5)
+        tags_data = json.loads(resp.read())
+        print(f"✅ Ollama is running at {ollama_url}")
+
+        # 2. Required models present
+        available = [m.get("name", "") for m in tags_data.get("models", [])]
+        for model in [embed_model, llm_model]:
+            # Match by prefix (e.g. "mistral:7b" matches "mistral:7b-instruct")
+            found = any(m == model or m.startswith(model.split(":")[0] + ":") for m in available)
+            if found:
+                print(f"✅ Model present: {model}")
+            else:
+                print(f"❌ Model missing: {model}  (run: ollama pull {model})")
+                all_ok = False
+
+    except urllib.error.URLError:
+        print(f"❌ Ollama not reachable at {ollama_url}  (run: ollama serve)")
+        print(f"❌ Model check skipped: {embed_model}")
+        print(f"❌ Model check skipped: {llm_model}")
+        all_ok = False
+
+    # 3. mem0ai importable
+    try:
+        import mem0  # noqa: F401
+        print("✅ mem0ai is importable")
+    except ImportError:
+        print("❌ mem0ai not installed  (run: pip install mem0ai)")
+        all_ok = False
+
+    # 4. chromadb importable
+    try:
+        import chromadb  # noqa: F401
+        print("✅ chromadb is importable")
+    except ImportError:
+        print("❌ chromadb not installed  (run: pip install chromadb)")
+        all_ok = False
+
+    if not all_ok:
+        sys.exit(1)
+
+
 def cmd_serve(args):
     """Start the memory server."""
     config = load_config()
@@ -209,6 +260,9 @@ def main():
     )
     sub = parser.add_subparsers(dest="command")
 
+    # check
+    sub.add_parser("check", help="Validate prerequisites (Ollama, models, mem0ai, chromadb)")
+
     # init
     p_init = sub.add_parser("init", help="Initialize a new memory store")
     p_init.add_argument("--collection", help="Collection name")
@@ -248,6 +302,7 @@ def main():
         sys.exit(1)
 
     commands = {
+        "check": cmd_check,
         "init": cmd_init,
         "seed": cmd_seed,
         "serve": cmd_serve,
