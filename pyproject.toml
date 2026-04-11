@@ -18,7 +18,7 @@ classifiers = [
 ]
 dependencies = [
     "mem0ai>=0.1.0",
-    "chromadb>=1.0.0",
+    "chromadb>=1.5.7",
 ]
 
 [project.optional-dependencies]
