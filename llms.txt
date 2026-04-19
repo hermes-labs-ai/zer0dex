@@ -1,29 +1,28 @@
 # zer0dex
 
-> Dual-layer memory architecture for persistent AI agents. Compressed markdown index + local vector store. 91.2% recall, 70ms latency, $0/month.
+Local dual-layer memory architecture for AI agents.
 
-zer0dex gives AI agents long-term memory by combining two layers:
-1. A compressed markdown index (always in context, ~782 tokens) — acts as a semantic table of contents
-2. A local vector store (mem0 + chromadb) — queried automatically on every inbound message via HTTP hook
+Use this repo when you need to:
+- combine a compressed markdown memory index with vector retrieval
+- run a local memory server for agent recall
+- seed and query persistent memory without a hosted service
 
-The dual-layer approach outperforms both flat files alone (52.2%) and standard RAG alone (80.3%). On cross-reference queries, zer0dex scores 80% vs 37.5% for full RAG — the compressed index provides navigational scaffolding that helps bridge domains vector similarity can't connect.
+Primary CLI:
+- `zer0dex check`
+- `zer0dex init`
+- `zer0dex seed --source <path>`
+- `zer0dex serve`
+- `zer0dex query "<text>"`
 
-Stack: Python 3.11+, mem0ai, chromadb, ollama (nomic-embed-text + mistral:7b). Fully local, no external API calls.
+Outputs:
+- prerequisite checks
+- memory seeding progress
+- health and query results from the local server
 
-## Docs
-- [README](README.md): Architecture overview, benchmarks, quick start, comparison table
-- [Evaluation Methodology](eval/README.md): How the n=97 benchmark works, scoring, limitations
+Do not use this repo as:
+- a hosted memory platform
+- a governance layer for memory safety
+- proof that the benchmark transfers unchanged to every use case
 
-## Code
-- [Memory Server](src/zer0dex/server.py): HTTP server for memory queries (GET /health, POST /query, POST /add)
-- [CLI](src/zer0dex/cli.py): Command-line interface (check, init, seed, serve, query, status, add)
-- [Seeder](src/zer0dex/seed.py): Seeds markdown files into the vector store
-- [Hook Example](src/zer0dex/hook_example.ts): TypeScript integration pattern for agent frameworks
-
-## Evaluation
-- [Full Benchmark](eval/evaluate.py): n=97 test suite across direct recall, cross-reference, and negative queries
-- [Quick Benchmark](eval/evaluate_small.py): n=10 subset for fast iteration
-
-## Optional
-- [License](LICENSE): Apache 2.0
-- [Agent Instructions](AGENTS.md): Instructions for AI coding agents working on this repo
+Key success condition:
+- local setup, seeding, serving, and querying work together as one persistent memory loop

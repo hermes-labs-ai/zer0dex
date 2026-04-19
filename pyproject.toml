@@ -1,14 +1,14 @@
 [project]
 name = "zer0dex"
 version = "0.0.9"
-description = "Dual-layer memory for AI agents. Compressed index + vector store. 91% recall, 70ms, $0/month. By Hermes Labs."
+description = "Local dual-layer memory for AI agents using a compressed index plus vector retrieval."
 readme = "README.md"
 license = {text = "Apache-2.0"}
 requires-python = ">=3.11"
 authors = [
-    {name = "Hermes Labs", email = "roli@hermes-labs.ai"},
+    {name = "Rolando Bosch"},
 ]
-keywords = ["rag", "memory", "ai-agents", "llm", "vector-store", "mem0"]
+keywords = ["agent-memory", "persistent-memory", "local-first", "rag", "memory", "vector-store"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -25,8 +25,8 @@ dependencies = [
 dev = ["pytest>=7.0"]
 
 [project.urls]
-Homepage = "https://hermes-labs.ai"
-Documentation = "https://hermes-labs.ai/zer0dex"
+Homepage = "https://github.com/roli-lpci/zer0dex"
+Documentation = "https://github.com/roli-lpci/zer0dex#readme"
 Repository = "https://github.com/roli-lpci/zer0dex"
 Issues = "https://github.com/roli-lpci/zer0dex/issues"
 Changelog = "https://github.com/roli-lpci/zer0dex/blob/main/CHANGELOG.md"
@@ -43,4 +43,3 @@ where = ["src"]
 [build-system]
 requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"
-

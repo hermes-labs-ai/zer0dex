@@ -1,5 +1,38 @@
 # zer0dex
 
+Long-running agents forget what matters because either everything is stuffed into one flat memory file or everything is left floating in a vector store with no map.
+
+`zer0dex` is a local dual-layer memory pattern for AI agents: a compressed markdown memory index plus a vector store that is queried automatically before each message.
+
+- "My agent technically has memory, but it still forgets cross-project context."
+- "Vector search finds facts, but not how those facts relate to each other."
+- "A giant MEMORY.md is cheap, but the agent still has to guess what matters."
+- "I want local agent memory without a hosted memory product or another orchestration stack."
+
+```bash
+pip install zer0dex
+```
+
+```bash
+zer0dex --help
+```
+
+```text
+usage: zer0dex [-h] {check,init,seed,serve,query,status,add} ...
+
+Dual-layer memory for AI agents. 91% recall, 70ms, $0/month.
+```
+
+**When To Use It**
+
+Use `zer0dex` when you want a local persistent-memory layer for agents that need both fast recall and a lightweight human-readable index for cross-reference and navigation.
+
+**When Not To Use It**
+
+Do not use `zer0dex` if you need a hosted memory service, automatic policy governance, or proof that the benchmark will transfer unchanged to every workload. It is a local memory architecture and reference implementation.
+
+![zer0dex preview](assets/preview.png)
+
 [![PyPI version](https://img.shields.io/pypi/v/zer0dex)](https://pypi.org/project/zer0dex/)
 [![PyPI downloads](https://img.shields.io/pypi/dm/zer0dex)](https://pypi.org/project/zer0dex/)
 [![GitHub stars](https://img.shields.io/github/stars/roli-lpci/zer0dex)](https://github.com/roli-lpci/zer0dex)
@@ -197,19 +230,6 @@ See [eval/README.md](eval/README.md) for methodology and detailed results.
 
 *MemGPT recall estimated; no published head-to-head comparison available.
 
-## Hermes Labs Ecosystem
-
-zer0dex is part of the [Hermes Labs](https://hermes-labs.ai) open-source suite:
-
-- [**little-canary**](https://github.com/roli-lpci/little-canary) — Prompt injection detection
-- [**lintlang**](https://github.com/roli-lpci/lintlang) — Static linter for AI agent configs
-- [**forgetted**](https://github.com/roli-lpci/forgetted) — Selective memory governance
-- [**zer0lint**](https://github.com/roli-lpci/zer0lint) — mem0 extraction diagnostics
-- [**suy-sideguy**](https://github.com/roli-lpci/suy-sideguy) — Autonomous agent watchdog
-- [**quickthink**](https://github.com/roli-lpci/quickthink) — Planning scaffolding for local LLMs
-
----
-
 If zer0dex is useful to you, please [star the repo](https://github.com/roli-lpci/zer0dex) — it helps others find it.
 
 ## Citation
@@ -229,6 +249,4 @@ Apache 2.0
 
 ## Credits
 
-Built by [Hermes Labs](https://hermes-labs.ai) as part of LPCI (Linguistically Persistent Cognitive Interface) research.
-
-Uses [mem0](https://mem0.ai) for vector storage, [chromadb](https://www.trychroma.com/) for the vector database, and [Ollama](https://ollama.ai) for local embeddings/extraction.
+Uses [mem0](https://mem0.ai) for vector storage, [chromadb](https://www.trychroma.com/) for the vector database, and [Ollama](https://ollama.ai) for local embeddings and extraction.

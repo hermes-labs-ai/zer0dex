@@ -1,0 +1,5 @@
+$ zer0dex --help
+
+usage: zer0dex [-h] {check,init,seed,serve,query,status,add} ...
+
+Dual-layer memory for AI agents. 91% recall, 70ms, $0/month.
