@@ -22,7 +22,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7.0"]
+dev = ["pytest>=9.0.3"]
 
 [project.urls]
 Homepage = "https://github.com/hermes-labs-ai/zer0dex"
