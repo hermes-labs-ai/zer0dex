@@ -41,5 +41,5 @@ where = ["src"]
 "" = "src"
 
 [build-system]
-requires = ["setuptools>=68.0"]
+requires = ["setuptools>=82.0.1"]
 build-backend = "setuptools.build_meta"
