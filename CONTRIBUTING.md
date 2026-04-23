@@ -5,7 +5,7 @@ Thanks for your interest in contributing!
 ## Getting Started
 
 ```bash
-git clone https://github.com/roli-lpci/zer0dex.git
+git clone https://github.com/hermes-labs-ai/zer0dex.git
 cd zer0dex
 pip install -e ".[dev]"
 pytest tests/ -v
@@ -31,4 +31,4 @@ pytest tests/ -v
 
 ## Reporting Bugs
 
-Use the [bug report template](https://github.com/roli-lpci/zer0dex/issues/new?template=bug_report.yml).
+Use the [bug report template](https://github.com/hermes-labs-ai/zer0dex/issues/new?template=bug_report.yml).
