@@ -263,7 +263,7 @@ Uses [mem0](https://mem0.ai) for vector storage, [chromadb](https://www.trychrom
 - **We open-source our own infrastructure.** The tools we release are what Hermes Labs uses internally — we don't publish demo code, we publish production code.
 - **We sell audit work, not licenses.** If you want an ANNEX-IV pack, an ISO 42001 evidence bundle, gap analysis against the EU AI Act, or agent-level red-teaming delivered as a report, that's at [hermes-labs.ai](https://hermes-labs.ai). If you just want the code to run it yourself, it's right here.
 
-**The Hermes Labs OSS audit stack** (public, production-grade, no SaaS):
+**The Hermes Labs OSS audit stack** (public, open-source, no SaaS):
 
 **Static audit** (before deployment)
 - [**lintlang**](https://github.com/hermes-labs-ai/lintlang) — Static linter for AI agent configs, tool descriptions, system prompts. `pip install lintlang`
