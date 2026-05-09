@@ -17,7 +17,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
-    "mem0ai>=0.1.0",
+    "mem0ai>=2.0.2",
     "chromadb>=1.0.0",
 ]
 
