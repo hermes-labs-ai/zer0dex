@@ -19,7 +19,7 @@ import json
 import time
 from pathlib import Path
 
-WORKSPACE = Path("/Users/rbr_lpci/.openclaw/workspace")
+WORKSPACE = Path.home() / ".zer0dex" / "eval-workspace"
 sys.path.insert(0, str(WORKSPACE / ".venv311/lib/python3.11/site-packages"))
 
 from mem0 import Memory
@@ -27,7 +27,7 @@ from mem0 import Memory
 CONFIG = {
     "llm": {"provider": "ollama", "config": {"model": "mistral:7b", "ollama_base_url": "http://localhost:11434"}},
     "embedder": {"provider": "ollama", "config": {"model": "nomic-embed-text", "ollama_base_url": "http://localhost:11434"}},
-    "vector_store": {"provider": "chroma", "config": {"collection_name": "herculit0_memory", "path": str(WORKSPACE / ".mem0_chroma")}},
+    "vector_store": {"provider": "chroma", "config": {"collection_name": "demo_memory", "path": str(WORKSPACE / ".mem0_chroma")}},
 }
 
 # ── Test Questions ──
@@ -55,13 +55,13 @@ TEST_CASES = [
         "difficulty": "medium",  # name in MEMORY.md, details in mem0
     },
     {
-        "question": "What is the status of the EF Bridge application?",
-        "expected_facts": ["April 6", "deadline", "SF"],
+        "question": "What is the status of the Acme Fellowship application?",
+        "expected_facts": ["March 1", "deadline", "NYC"],
         "memory_md_section": "Applications (Status)",
         "difficulty": "easy",
     },
     {
-        "question": "What did Roli teach Herculit0 about being a good agent?",
+        "question": "What did the user teach the demo agent about being a good agent?",
         "expected_facts": ["agentic", "research", "chat", "gateway"],
         "memory_md_section": "Key Lessons",
         "difficulty": "medium",
@@ -73,14 +73,14 @@ TEST_CASES = [
         "difficulty": "hard",  # detailed test results only in mem0
     },
     {
-        "question": "What languages does Roli speak?",
-        "expected_facts": ["English", "Spanish", "French", "Italian"],
+        "question": "What languages does the user speak?",
+        "expected_facts": ["English", "Spanish", "German"],
         "memory_md_section": "Roli (User)",
         "difficulty": "easy",
     },
     {
-        "question": "What is the Moltbook verification code?",
-        "expected_facts": ["claw-H52H"],
+        "question": "What is the DemoProject verification code?",
+        "expected_facts": ["vc-0000X"],
         "memory_md_section": "Active Projects",
         "difficulty": "hard",  # very specific, only in daily log → mem0
     },
@@ -91,8 +91,8 @@ TEST_CASES = [
         "difficulty": "hard",  # very specific operational detail
     },
     {
-        "question": "Who is Vincent and what was sent to him?",
-        "expected_facts": ["OpenClaw maintainer", "PR", "message-filter plugin"],
+        "question": "Who is Alex and what was sent to them?",
+        "expected_facts": ["upstream maintainer", "PR", "message-filter plugin"],
         "memory_md_section": "Active Projects",
         "difficulty": "hard",  # only in mem0
     },
@@ -128,7 +128,7 @@ def mode_b_zer0dex(question, memory_md_text, mem0_instance):
     
     # Step 2: query mem0 for the specific topic
     t1 = time.time()
-    results = mem0_instance.search(question, user_id="herculit0", limit=10)
+    results = mem0_instance.search(question, user_id="demo_agent", limit=10)
     memories = results.get("results", [])
     mem0_text = "\n".join([m.get("memory", "") for m in memories])
     
@@ -148,7 +148,7 @@ def mode_b_zer0dex(question, memory_md_text, mem0_instance):
 def mode_c_full_rag(question, mem0_instance):
     """Mode C: Full RAG. Query mem0 directly, no MEMORY.md."""
     start = time.time()
-    results = mem0_instance.search(question, user_id="herculit0", limit=10)
+    results = mem0_instance.search(question, user_id="demo_agent", limit=10)
     memories = results.get("results", [])
     retrieval = "\n".join([m.get("memory", "") for m in memories])
     latency = time.time() - start

@@ -11,7 +11,7 @@ import time
 import random
 from pathlib import Path
 
-WORKSPACE = Path("/Users/rbr_lpci/.openclaw/workspace")
+WORKSPACE = Path.home() / ".zer0dex" / "eval-workspace"
 sys.path.insert(0, str(WORKSPACE / ".venv311/lib/python3.11/site-packages"))
 
 from mem0 import Memory
@@ -19,7 +19,7 @@ from mem0 import Memory
 CONFIG = {
     "llm": {"provider": "ollama", "config": {"model": "mistral:7b", "ollama_base_url": "http://localhost:11434"}},
     "embedder": {"provider": "ollama", "config": {"model": "nomic-embed-text", "ollama_base_url": "http://localhost:11434"}},
-    "vector_store": {"provider": "chroma", "config": {"collection_name": "herculit0_memory", "path": str(WORKSPACE / ".mem0_chroma")}},
+    "vector_store": {"provider": "chroma", "config": {"collection_name": "demo_memory", "path": str(WORKSPACE / ".mem0_chroma")}},
 }
 
 def load_memory_md():
@@ -77,19 +77,19 @@ def generate_test_cases(memories):
          "expected_facts": ["Little Canary", "lintlang", "Suy Sideguy", "Quick Gate"],
          "type": "cross_reference"},
         {"question": "What grant applications have been submitted?",
-         "expected_facts": ["NVIDIA", "Cloudflare", "Google"],
+         "expected_facts": ["Acme Cloud", "Globex", "Initech"],
          "type": "cross_reference"},
-        {"question": "What is Roli's educational background?",
-         "expected_facts": ["philosophy", "Wittgenstein", "Gadamer"],
+        {"question": "What is the user's educational background?",
+         "expected_facts": ["computer science", "Turing", "Knuth"],
          "type": "cross_reference"},
-        {"question": "What GTM documents exist?",
-         "expected_facts": ["HERMES-LABS.md", "ROLI-VOICE.md", "APPLICATIONS-TRACKER"],
+        {"question": "What internal documents exist?",
+         "expected_facts": ["COMPANY.md", "VOICE.md", "TRACKER.md"],
          "type": "cross_reference"},
         {"question": "What are the four epistemic failure modes?",
          "expected_facts": ["sycophancy", "null-result", "hermeneutic", "intent"],
          "type": "cross_reference"},
         {"question": "What is the defense stack status?",
-         "expected_facts": ["Little Canary", "Suy Sideguy", "OpenClaw"],
+         "expected_facts": ["Little Canary", "Suy Sideguy", "DemoAgent"],
          "type": "cross_reference"},
         {"question": "What open source contributions has Roli made?",
          "expected_facts": ["PRs", "merged"],
@@ -101,7 +101,7 @@ def generate_test_cases(memories):
          "expected_facts": ["canary_sidecar", "JSONL", "screening"],
          "type": "cross_reference"},
         {"question": "What applications are still pending?",
-         "expected_facts": ["SFF", "Microsoft"],
+         "expected_facts": ["Hooli", "Stark"],
          "type": "cross_reference"},
     ]
     tests.extend(cross_ref)
@@ -157,7 +157,7 @@ def run_eval():
     m = Memory.from_config(CONFIG)
     
     # Get all memories for test generation
-    all_mem = m.get_all(user_id="herculit0")
+    all_mem = m.get_all(user_id="demo_agent")
     memories = all_mem.get("results", [])
     print(f"Memories in store: {len(memories)}")
     
@@ -197,7 +197,7 @@ def run_eval():
         
         # Mode B: zer0dex
         t0 = time.time()
-        b_mem = m.search(q, user_id="herculit0", limit=10)
+        b_mem = m.search(q, user_id="demo_agent", limit=10)
         b_memories = b_mem.get("results", [])
         b_mem_text = "\n".join([x.get("memory", "") for x in b_memories])
         b_text = memory_md + "\n" + b_mem_text
@@ -210,7 +210,7 @@ def run_eval():
         
         # Mode C: Full RAG only
         t0 = time.time()
-        c_mem = m.search(q, user_id="herculit0", limit=10)
+        c_mem = m.search(q, user_id="demo_agent", limit=10)
         c_memories = c_mem.get("results", [])
         c_text = "\n".join([x.get("memory", "") for x in c_memories])
         c_lat = time.time() - t0
