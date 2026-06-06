@@ -4,7 +4,7 @@
  * This shows how to inject mem0 context into an agent's message pipeline.
  * Adapt this to your framework's message dispatch flow.
  * 
- * For OpenClaw: this goes in src/auto-reply/dispatch.ts
+ * For an agent harness: this goes in src/auto-reply/dispatch.ts
  * For other frameworks: add before your LLM call.
  */
 
