@@ -1,0 +1,34 @@
+name: Publish to PyPI
+
+# Fires when you publish a GitHub Release. That same Release also triggers
+# Zenodo DOI minting (if the repo is toggled on in Zenodo) — so one action
+# (publish a Release) mints the DOI AND ships to PyPI, both green.
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Build and publish to PyPI
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write   # required for PyPI Trusted Publishing (OIDC) — no API token needed
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build sdist and wheel
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
