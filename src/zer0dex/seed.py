@@ -56,7 +56,11 @@ def chunk_markdown(text, max_chunk=2000):
     sections = []
     current = []
     for line in text.split("\n"):
-        if line.startswith("## ") and current:
+        current_has_content = any(
+            existing.strip() and not existing.lstrip().startswith("#")
+            for existing in current
+        )
+        if line.startswith("## ") and current_has_content:
             sections.append("\n".join(current))
             current = [line]
         else:

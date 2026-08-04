@@ -64,6 +64,11 @@ class TestChunkMarkdown:
         chunks = chunk_markdown(text)
         assert len(chunks) == 3  # title+intro, section A, section B
 
+    def test_does_not_emit_heading_only_preamble(self):
+        text = "# Memory\n\n## Project Atlas\nDeployment target: staging."
+        chunks = chunk_markdown(text)
+        assert chunks == [text]
+
     def test_no_empty_chunks(self):
         text = "\n\n\n## A\nstuff\n\n\n## B\nmore\n\n"
         chunks = chunk_markdown(text)
