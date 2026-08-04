@@ -1,6 +1,6 @@
 [project]
 name = "zer0dex"
-version = "0.0.9"
+version = "0.0.10"
 description = "Local dual-layer memory for AI agents using a compressed index plus vector retrieval."
 readme = "README.md"
 license = {text = "Apache-2.0"}
