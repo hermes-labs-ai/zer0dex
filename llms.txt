@@ -1,10 +1,11 @@
 # zer0dex
 
-Local dual-layer memory architecture for AI agents.
+Local dual-layer memory architecture for AI agents. Version 0.1.0 is the first
+supported developer-preview compatibility line; the package remains Alpha.
 
 Use this repo when you need to:
 - combine a compressed markdown memory index with vector retrieval
-- run a local memory server for agent recall
+- run a local memory server that an agent host can query before model calls
 - seed and query persistent memory without a hosted service
 
 Primary CLI:
@@ -26,6 +27,13 @@ Do not use this repo as:
 
 Key success condition:
 - local setup, seeding, serving, and querying work together as one persistent memory loop
+
+Compatibility:
+- migration notes precede documented breaking changes during the 0.1.x line
+- exact CLI behavior: docs/cli.md
+- exact HTTP behavior: docs/http.md
+- compatibility policy: docs/compatibility.md
+- benchmark methodology and workload limits: eval/README.md
 
 
 ## About Hermes Labs
@@ -61,4 +69,3 @@ Most AI reliability work treats reliability as a property of model weights — b
 ### Citation
 
 Bosch, R. (2026). *Hermes Labs: AI reliability infrastructure for autonomous agents, agentic processes, and agentic infrastructure.* https://hermes-labs.ai
-
