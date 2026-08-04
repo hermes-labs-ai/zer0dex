@@ -94,7 +94,9 @@ class TestHealthEndpoint:
         assert handler._response_code == 200
         assert handler._response_body["status"] == "ok"
         assert handler._response_body["count"] == 2
-        mock_memory.get_all.assert_called_once_with(filters={"user_id": "agent"})
+        mock_memory.get_all.assert_called_once_with(
+            filters={"user_id": "agent"}, top_k=100
+        )
 
     def test_unknown_get_returns_404(self):
         handler = make_handler("GET", "/unknown")

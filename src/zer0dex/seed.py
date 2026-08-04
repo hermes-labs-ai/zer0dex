@@ -92,8 +92,16 @@ def chunk_markdown(text, max_chunk=2000):
 
 def get_all_for_user(memory, user_id):
     """Read a user's memories across the supported mem0 API shapes."""
+    top_k = 100
     try:
-        return memory.get_all(filters={"user_id": user_id})
+        while True:
+            result = memory.get_all(
+                filters={"user_id": user_id},
+                top_k=top_k,
+            )
+            if len(result.get("results", [])) < top_k:
+                return result
+            top_k *= 2
     except TypeError:
         # Older mem0 releases accepted entity IDs as top-level parameters.
         return memory.get_all(user_id=user_id)

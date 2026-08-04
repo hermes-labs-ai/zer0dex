@@ -106,7 +106,25 @@ class TestMem0ApiCompatibility:
         memory.get_all.return_value = {"results": []}
 
         assert get_all_for_user(memory, "agent") == {"results": []}
-        memory.get_all.assert_called_once_with(filters={"user_id": "agent"})
+        memory.get_all.assert_called_once_with(
+            filters={"user_id": "agent"}, top_k=100
+        )
+
+    def test_get_all_expands_past_current_default_limit(self):
+        memory = MagicMock()
+        first_page = {"results": [{"memory": str(i)} for i in range(100)]}
+        complete = {"results": [{"memory": str(i)} for i in range(125)]}
+        memory.get_all.side_effect = [first_page, complete]
+
+        assert get_all_for_user(memory, "agent") == complete
+        assert memory.get_all.call_args_list[0].kwargs == {
+            "filters": {"user_id": "agent"},
+            "top_k": 100,
+        }
+        assert memory.get_all.call_args_list[1].kwargs == {
+            "filters": {"user_id": "agent"},
+            "top_k": 200,
+        }
 
     def test_search_uses_current_filters_api(self):
         memory = MagicMock()

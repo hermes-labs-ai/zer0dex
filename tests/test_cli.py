@@ -242,9 +242,13 @@ class TestCliLocalServerExchange:
             def __init__(self):
                 self.memories = ["Use concise factual replies."]
 
-            def get_all(self, *, filters):
+            def get_all(self, *, filters, top_k):
                 assert filters == {"user_id": "agent"}
-                return {"results": [{"memory": text} for text in self.memories]}
+                return {
+                    "results": [
+                        {"memory": text} for text in self.memories[:top_k]
+                    ]
+                }
 
             def search(self, text, *, filters, top_k):
                 assert filters == {"user_id": "agent"}
