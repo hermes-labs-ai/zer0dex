@@ -1,7 +1,7 @@
 # CLI contract (developer preview)
 
-`zer0dex` is a local command-line interface. It writes no hosted state and its
-server listens on `127.0.0.1` only.
+`zer0dex` stores memories locally by default, and its server listens on
+`127.0.0.1` only.
 
 Run commands from the directory that should own the store. `zer0dex init`
 creates `.zer0dex.json` and, by default, the `.zer0dex/` Chroma directory in

@@ -16,6 +16,15 @@ All notable changes to zer0dex are documented here.
 - Split exact CLI, HTTP, compatibility, and evaluation semantics into focused
   reference documentation.
 
+### Fixed
+- Updated user-scoped reads and searches for the current mem0 2.x API while
+  retaining the legacy call shape as a compatibility fallback.
+- Made background serving wait for its own health check and reject an occupied
+  port instead of reporting a different local server as ready.
+- Stopped content-free markdown headings from becoming extraction chunks.
+- Kept the release-published PyPI job's repository read permission alongside
+  its trusted-publishing identity-token permission.
+
 ### Compatibility
 - Existing 0.0.x commands and local configuration remain the basis of 0.1.0.
 - Migration notes will precede documented breaking changes during the 0.1.x

@@ -178,6 +178,7 @@ class TestRuntimePrerequisites:
         process = SimpleNamespace(pid=123, poll=lambda: None)
         monkeypatch.setattr(cli, "require_ollama_client", lambda: True)
         monkeypatch.setattr(cli, "load_config", lambda: {})
+        monkeypatch.setattr(cli, "port_is_in_use", lambda port: False)
         monkeypatch.setattr(cli.subprocess, "Popen", lambda *args, **kwargs: process)
         monkeypatch.setattr(cli, "wait_for_server", lambda port, process: True)
 
@@ -189,6 +190,7 @@ class TestRuntimePrerequisites:
         process = SimpleNamespace(pid=123, poll=lambda: None)
         monkeypatch.setattr(cli, "require_ollama_client", lambda: True)
         monkeypatch.setattr(cli, "load_config", lambda: {})
+        monkeypatch.setattr(cli, "port_is_in_use", lambda port: False)
         monkeypatch.setattr(cli.subprocess, "Popen", lambda *args, **kwargs: process)
         monkeypatch.setattr(cli, "wait_for_server", lambda port, process: False)
 
@@ -196,6 +198,17 @@ class TestRuntimePrerequisites:
             cli.cmd_serve(SimpleNamespace(port=None, background=True))
 
         assert exit_info.value.code == 1
+
+    def test_background_serve_rejects_an_occupied_port(self, monkeypatch, capsys):
+        monkeypatch.setattr(cli, "require_ollama_client", lambda: True)
+        monkeypatch.setattr(cli, "load_config", lambda: {})
+        monkeypatch.setattr(cli, "port_is_in_use", lambda port: True)
+
+        with pytest.raises(SystemExit) as exit_info:
+            cli.cmd_serve(SimpleNamespace(port=18420, background=True))
+
+        assert exit_info.value.code == 1
+        assert "port 18420 is already in use" in capsys.readouterr().out
 
     def test_background_readiness_wait_observes_health_endpoint(self):
         class HealthHandler(BaseHTTPRequestHandler):

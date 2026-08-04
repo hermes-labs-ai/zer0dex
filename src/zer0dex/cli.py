@@ -12,6 +12,7 @@ Commands:
 """
 import argparse
 import json
+import socket
 import subprocess
 import sys
 import time
@@ -42,6 +43,15 @@ def require_ollama_client():
         )
         return False
     return True
+
+
+def port_is_in_use(port):
+    """Return whether another local process is already listening on the port."""
+    try:
+        with socket.create_connection(("127.0.0.1", port), timeout=0.2):
+            return True
+    except OSError:
+        return False
 
 
 def wait_for_server(port, process, timeout_seconds=30):
@@ -233,6 +243,9 @@ def cmd_serve(args):
     ]
 
     if args.background:
+        if port_is_in_use(port):
+            print(f"Error: port {port} is already in use; no server was started.")
+            sys.exit(1)
         proc = subprocess.Popen(server_args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         if not wait_for_server(port, proc):
             sys.exit(1)

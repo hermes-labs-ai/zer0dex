@@ -7,13 +7,13 @@ retrieval from a local vector store.
 [![PyPI version](https://img.shields.io/pypi/v/zer0dex)](https://pypi.org/project/zer0dex/)
 [![Python](https://img.shields.io/pypi/pyversions/zer0dex)](https://pypi.org/project/zer0dex/)
 [![CI](https://github.com/hermes-labs-ai/zer0dex/actions/workflows/ci.yml/badge.svg)](https://github.com/hermes-labs-ai/zer0dex/actions/workflows/ci.yml)
-[![License](https://img.shields.io/pypi/l/zer0dex)](LICENSE)
+[![License](https://img.shields.io/pypi/l/zer0dex)](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.0/LICENSE)
 
 **0.1.0 is the first supported developer-preview line.** The project remains
 Alpha: expect refinement, but migration notes will precede documented breaking
-changes during the 0.1.x line. See the [compatibility policy](docs/compatibility.md).
+changes during the 0.1.x line. See the [compatibility policy](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.0/docs/compatibility.md).
 
-![zer0dex preview](assets/preview.png)
+![zer0dex preview](https://raw.githubusercontent.com/hermes-labs-ai/zer0dex/v0.1.0/assets/preview.png)
 
 ## Who needs it
 
@@ -84,10 +84,10 @@ and trust policy. The server also exposes `POST /add` and `GET /health`.
 Exact commands, options, response fields, errors, and compatibility promises
 live in the reference documentation:
 
-- [CLI reference](docs/cli.md)
-- [HTTP API reference](docs/http.md)
-- [Compatibility and migration policy](docs/compatibility.md)
-- [Evaluation methodology, results, and limitations](eval/README.md)
+- [CLI reference](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.0/docs/cli.md)
+- [HTTP API reference](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.0/docs/http.md)
+- [Compatibility and migration policy](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.0/docs/compatibility.md)
+- [Evaluation methodology, results, and limitations](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.0/eval/README.md)
 
 ## Evidence and limits
 
@@ -126,8 +126,10 @@ pip install -e ".[dev]"
 python -m pytest tests/ -q
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidance and
-[CHANGELOG.md](CHANGELOG.md) for release history.
+See [CONTRIBUTING.md](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.0/CONTRIBUTING.md)
+for contribution guidance and the
+[changelog](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.0/CHANGELOG.md)
+for release history.
 
 ## Citation
 
