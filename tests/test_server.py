@@ -94,6 +94,9 @@ class TestHealthEndpoint:
         assert handler._response_code == 200
         assert handler._response_body["status"] == "ok"
         assert handler._response_body["count"] == 2
+        mock_memory.get_all.assert_called_once_with(
+            filters={"user_id": "agent"}, top_k=100
+        )
 
     def test_unknown_get_returns_404(self):
         handler = make_handler("GET", "/unknown")
@@ -120,6 +123,9 @@ class TestQueryEndpoint:
         assert handler._response_code == 200
         assert len(handler._response_body["memories"]) == 1
         assert handler._response_body["memories"][0]["text"] == "good"
+        mock_memory.search.assert_called_once_with(
+            "test query", filters={"user_id": "agent"}, top_k=5
+        )
 
     def test_query_empty_text_returns_empty(self):
         handler = make_handler("POST", "/query", {"text": ""})
@@ -187,3 +193,32 @@ class TestAddEndpoint:
 
         handler.do_POST()
         assert handler._response_code == 400
+
+    def test_json_array_returns_400(self):
+        handler = make_handler("POST", "/query", {})
+        handler._read_body = lambda: ["not", "an", "object"]
+        handler.path = "/query"
+
+        handler.do_POST()
+        assert handler._response_code == 400
+        assert handler._response_body == {"error": "invalid json"}
+
+    def test_query_rejects_invalid_limit(self):
+        handler = make_handler("POST", "/query", {"text": "test query", "limit": 0})
+        handler._read_body = lambda: {"text": "test query", "limit": 0}
+        handler.path = "/query"
+        handler.memory = MagicMock()
+
+        handler.do_POST()
+        assert handler._response_code == 400
+        assert handler._response_body == {"error": "limit must be a positive integer"}
+
+    def test_add_rejects_non_string_text(self):
+        handler = make_handler("POST", "/add", {"text": 1})
+        handler._read_body = lambda: {"text": 1}
+        handler.path = "/add"
+        handler.memory = MagicMock()
+
+        handler.do_POST()
+        assert handler._response_code == 400
+        assert handler._response_body == {"error": "text must be a non-empty string"}

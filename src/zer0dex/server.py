@@ -13,10 +13,16 @@ Usage:
 """
 import argparse
 import json
+from numbers import Real
 import sys
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
-from mem0 import Memory
+try:
+    from mem0 import Memory
+except ImportError:
+    Memory = None
+
+from zer0dex.seed import get_all_for_user, search_for_user
 
 
 def build_config(args):
@@ -71,7 +77,7 @@ class Mem0Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == "/health":
-            all_mem = self.memory.get_all(user_id=self.user_id)
+            all_mem = get_all_for_user(self.memory, self.user_id)
             count = len(all_mem.get("results", []))
             self._send_json({"status": "ok", "count": count})
         else:
@@ -79,7 +85,7 @@ class Mem0Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         data = self._read_body()
-        if data is None:
+        if not isinstance(data, dict):
             self._send_json({"error": "invalid json"}, 400)
             return
 
@@ -87,15 +93,24 @@ class Mem0Handler(BaseHTTPRequestHandler):
             text = data.get("text", "")
             limit = data.get("limit", 5)
             min_score = data.get("min_score", self.min_score)
-            if not text or len(text.strip()) < 3:
+            if not isinstance(text, str):
+                self._send_json({"error": "text must be a string"}, 400)
+                return
+            if not isinstance(limit, int) or isinstance(limit, bool) or limit < 1:
+                self._send_json({"error": "limit must be a positive integer"}, 400)
+                return
+            if not isinstance(min_score, Real) or isinstance(min_score, bool):
+                self._send_json({"error": "min_score must be a number"}, 400)
+                return
+            if len(text.strip()) < 3:
                 self._send_json({"memories": []})
                 return
 
-            results = self.memory.search(text, user_id=self.user_id, limit=limit)
+            results = search_for_user(self.memory, text, self.user_id, limit)
             memories = []
             for mem in results.get("results", []):
                 score = mem.get("score", 0)
-                if score > min_score:
+                if isinstance(score, Real) and score > min_score:
                     memories.append({
                         "text": mem.get("memory", ""),
                         "score": round(score, 3),
@@ -104,8 +119,8 @@ class Mem0Handler(BaseHTTPRequestHandler):
 
         elif self.path == "/add":
             text = data.get("text", "")
-            if not text:
-                self._send_json({"error": "no text"}, 400)
+            if not isinstance(text, str) or not text.strip():
+                self._send_json({"error": "text must be a non-empty string"}, 400)
                 return
             result = self.memory.add(text, user_id=self.user_id)
             extracted = result.get("results", [])
@@ -130,10 +145,28 @@ def main():
     parser.add_argument("--min-score", type=float, default=0.3, help="Minimum relevance score")
     args = parser.parse_args()
 
+    if Memory is None:
+        print("Error: mem0ai not installed. Run: pip install mem0ai", file=sys.stderr)
+        return 1
+    try:
+        import ollama  # noqa: F401
+    except ImportError:
+        print(
+            "Error: Python package 'ollama' is not installed. "
+            "Install it with: pip install ollama",
+            file=sys.stderr,
+        )
+        return 1
+
     config = build_config(args)
     print(f"Loading mem0 (collection: {args.collection})...", flush=True)
-    memory = Memory.from_config(config)
-    all_mem = memory.get_all(user_id=args.user_id)
+    try:
+        memory = Memory.from_config(config)
+        all_mem = get_all_for_user(memory, args.user_id)
+    except Exception as exc:
+        print(f"Error: could not start local memory runtime: {exc}", file=sys.stderr)
+        print("Run `zer0dex check` to verify the Ollama service and models.", file=sys.stderr)
+        return 1
     count = len(all_mem.get("results", []))
     print(f"Ready — {count} memories, serving on port {args.port}", flush=True)
 
@@ -146,7 +179,10 @@ def main():
         server.serve_forever()
     except KeyboardInterrupt:
         print("\nServer stopped.")
+    finally:
+        server.server_close()
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

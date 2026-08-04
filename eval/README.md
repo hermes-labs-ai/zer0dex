@@ -71,6 +71,21 @@ python eval/evaluate_small.py
 - mem0ai and chromadb installed
 - A seeded zer0dex memory store
 
+## Benchmark workload and transfer limits
+
+The published workload is the 97 manually verified questions described above,
+drawn from one agent's 86-memory local store. It is useful for reproducing the
+reported comparison on that source and hardware setup; it is not a general
+benchmark of all agent-memory workloads. The questions overlap the evaluated
+store, so the result does not establish performance on an unseen corpus,
+different agents, larger stores, another embedding/extraction model, or a
+hosted deployment.
+
+To compare a changed runtime, record the exact store, question set, models,
+hardware, and run count. Do not transfer the table's recall, latency, token,
+or head-to-head values into a claim about another domain without a separately
+reproduced evaluation.
+
 ## Limitations
 
 - Single agent's memory store (86 memories)
@@ -78,5 +93,7 @@ python eval/evaluate_small.py
 - Not tested at scale (thousands of memories)
 - Hardware-specific latency numbers
 - No confidence intervals (single-run evaluation)
+- Results are workload-specific and should not be treated as a universal
+  retrieval, safety, or production-performance guarantee
 
 We encourage replication on different memory stores and welcome contributions to the evaluation suite.
