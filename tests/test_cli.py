@@ -1,4 +1,5 @@
 """Tests for zer0dex CLI — config, parsing, and check command."""
+import argparse
 import json
 import subprocess
 import sys
@@ -13,7 +14,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from zer0dex import cli
-from zer0dex.cli import load_config, save_config, main
+from zer0dex.cli import load_config, positive_int, save_config, main
 from zer0dex.server import Mem0Handler
 
 
@@ -143,6 +144,12 @@ class TestCheck:
 
 
 class TestRuntimePrerequisites:
+    def test_query_limit_must_be_positive(self):
+        with pytest.raises(argparse.ArgumentTypeError, match="positive integer"):
+            positive_int("0")
+
+        assert positive_int("3") == 3
+
     def test_seed_dry_run_does_not_need_runtime_clients(self, tmp_workdir, monkeypatch, capsys):
         source = tmp_workdir / "memory.md"
         source.write_text("# Memory\nA fixture for dry-run output.\n")

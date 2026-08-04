@@ -32,6 +32,14 @@ DEFAULT_USER_ID = "agent"
 CONFIG_FILE = ".zer0dex.json"
 
 
+def positive_int(value):
+    """Parse a strictly positive integer for CLI result limits."""
+    parsed = int(value)
+    if parsed < 1:
+        raise argparse.ArgumentTypeError("must be a positive integer")
+    return parsed
+
+
 def require_ollama_client():
     """Return whether the Python Ollama client required by mem0 is installed."""
     try:
@@ -349,7 +357,7 @@ def main():
     # query
     p_query = sub.add_parser("query", help="Query memories")
     p_query.add_argument("text", help="Query text")
-    p_query.add_argument("--limit", type=int, default=5, help="Max results")
+    p_query.add_argument("--limit", type=positive_int, default=5, help="Max results")
     p_query.add_argument("--port", type=int)
 
     # status

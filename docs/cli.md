@@ -51,7 +51,8 @@ zer0dex add TEXT [--port PORT]
   exits 1 (terminating the child) when readiness is not reached.
 - `status`, `query`, and `add` require a running local server. They exit 1
   when it cannot be reached. `query` exits 0 with `No relevant memories found.`
-  when the server returns an empty result set.
+  when the server returns an empty result set. `query --limit` requires a
+  positive integer; invalid values are rejected by the CLI before any request.
 
 The defaults are collection `zer0dex`, user ID `agent`, port `18420`, storage
 `.zer0dex`, Ollama URL `http://localhost:11434`, embedding model
