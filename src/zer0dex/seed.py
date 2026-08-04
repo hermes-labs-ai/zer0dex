@@ -11,9 +11,6 @@ import os
 import sys
 from pathlib import Path
 
-from mem0 import Memory
-
-
 def build_config(args):
     return {
         "llm": {
@@ -89,6 +86,24 @@ def chunk_markdown(text, max_chunk=2000):
     return [c for c in chunks if c.strip()]
 
 
+def get_all_for_user(memory, user_id):
+    """Read a user's memories across the supported mem0 API shapes."""
+    try:
+        return memory.get_all(filters={"user_id": user_id})
+    except TypeError:
+        # Older mem0 releases accepted entity IDs as top-level parameters.
+        return memory.get_all(user_id=user_id)
+
+
+def search_for_user(memory, text, user_id, limit):
+    """Search a user's memories across the supported mem0 API shapes."""
+    try:
+        return memory.search(text, filters={"user_id": user_id}, top_k=limit)
+    except TypeError:
+        # Older mem0 releases named the result bound ``limit``.
+        return memory.search(text, user_id=user_id, limit=limit)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Seed zer0dex vector store")
     parser.add_argument("--source", action="append", required=True, help="Source file or directory (can specify multiple)")
@@ -123,6 +138,22 @@ def main():
         print("\n[DRY RUN] Would seed the above chunks. Exiting.")
         sys.exit(0)
 
+    try:
+        import ollama  # noqa: F401
+    except ImportError:
+        print(
+            "Error: Python package 'ollama' is not installed. "
+            "Install it with: pip install ollama",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    try:
+        from mem0 import Memory
+    except ImportError:
+        print("Error: mem0ai not installed. Run: pip install mem0ai", file=sys.stderr)
+        sys.exit(1)
+
     config = build_config(args)
     print(f"\nLoading mem0 (collection: {args.collection})...")
     memory = Memory.from_config(config)
@@ -135,7 +166,7 @@ def main():
         total_extracted += extracted
         print(f"({extracted} memories extracted)")
 
-    all_mem = memory.get_all(user_id=args.user_id)
+    all_mem = get_all_for_user(memory, args.user_id)
     final_count = len(all_mem.get("results", []))
     print(f"\nDone. {total_extracted} memories extracted. Total in store: {final_count}")
 

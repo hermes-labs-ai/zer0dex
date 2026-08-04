@@ -14,6 +14,7 @@ import argparse
 import json
 import subprocess
 import sys
+import time
 import urllib.request
 import urllib.error
 from pathlib import Path
@@ -28,6 +29,41 @@ DEFAULT_OLLAMA_URL = "http://localhost:11434"
 DEFAULT_USER_ID = "agent"
 
 CONFIG_FILE = ".zer0dex.json"
+
+
+def require_ollama_client():
+    """Return whether the Python Ollama client required by mem0 is installed."""
+    try:
+        import ollama  # noqa: F401
+    except ImportError:
+        print(
+            "Error: Python package 'ollama' is not installed. "
+            "Install it with: pip install ollama"
+        )
+        return False
+    return True
+
+
+def wait_for_server(port, process, timeout_seconds=30):
+    """Wait for a background server to answer health checks before reporting it ready."""
+    url = f"http://127.0.0.1:{port}/health"
+    deadline = time.monotonic() + timeout_seconds
+    while time.monotonic() < deadline:
+        if process.poll() is not None:
+            print(f"Error: zer0dex server exited before readiness (exit {process.returncode}).")
+            return False
+        try:
+            response = urllib.request.urlopen(url, timeout=1)
+            payload = json.loads(response.read())
+            if payload.get("status") == "ok":
+                return True
+        except (urllib.error.URLError, json.JSONDecodeError):
+            pass
+        time.sleep(0.2)
+
+    process.terminate()
+    print(f"Error: zer0dex server did not become ready within {timeout_seconds} seconds.")
+    return False
 
 
 def load_config():
@@ -68,19 +104,7 @@ def cmd_seed(args):
     """Seed the vector store from files."""
     config = load_config()
     # Import here to avoid slow startup for other commands
-    from zer0dex.seed import collect_files, chunk_markdown
-
-    try:
-        from mem0 import Memory
-    except ImportError:
-        print("Error: mem0 not installed. Run: pip install mem0ai")
-        sys.exit(1)
-
-    mem_config = {
-        "llm": {"provider": "ollama", "config": {"model": config.get("llm_model", DEFAULT_LLM_MODEL), "ollama_base_url": config.get("ollama_url", DEFAULT_OLLAMA_URL)}},
-        "embedder": {"provider": "ollama", "config": {"model": config.get("embed_model", DEFAULT_EMBED_MODEL), "ollama_base_url": config.get("ollama_url", DEFAULT_OLLAMA_URL)}},
-        "vector_store": {"provider": "chroma", "config": {"collection_name": config.get("collection", DEFAULT_COLLECTION), "path": config.get("chroma_path", DEFAULT_CHROMA_PATH)}},
-    }
+    from zer0dex.seed import collect_files, chunk_markdown, get_all_for_user
 
     files = collect_files(args.source)
     if not files:
@@ -99,6 +123,21 @@ def cmd_seed(args):
         print(f"\n[DRY RUN] Would seed {len(all_chunks)} chunks. Exiting.")
         return
 
+    if not require_ollama_client():
+        sys.exit(1)
+
+    try:
+        from mem0 import Memory
+    except ImportError:
+        print("Error: mem0ai not installed. Run: pip install mem0ai")
+        sys.exit(1)
+
+    mem_config = {
+        "llm": {"provider": "ollama", "config": {"model": config.get("llm_model", DEFAULT_LLM_MODEL), "ollama_base_url": config.get("ollama_url", DEFAULT_OLLAMA_URL)}},
+        "embedder": {"provider": "ollama", "config": {"model": config.get("embed_model", DEFAULT_EMBED_MODEL), "ollama_base_url": config.get("ollama_url", DEFAULT_OLLAMA_URL)}},
+        "vector_store": {"provider": "chroma", "config": {"collection_name": config.get("collection", DEFAULT_COLLECTION), "path": config.get("chroma_path", DEFAULT_CHROMA_PATH)}},
+    }
+
     print(f"\nLoading mem0...")
     memory = Memory.from_config(mem_config)
     user_id = config.get("user_id", DEFAULT_USER_ID)
@@ -111,7 +150,7 @@ def cmd_seed(args):
         total += n
         print(f"({n} memories)")
 
-    all_mem = memory.get_all(user_id=user_id)
+    all_mem = get_all_for_user(memory, user_id)
     final = len(all_mem.get("results", []))
     print(f"\n✅ Seeded {total} memories. Total in store: {final}")
 
@@ -163,12 +202,21 @@ def cmd_check(args):
         print("❌ chromadb not installed  (run: pip install chromadb)")
         all_ok = False
 
+    # 5. mem0's Ollama providers require the separate Python client.
+    if require_ollama_client():
+        print("✅ Python Ollama client is importable")
+    else:
+        all_ok = False
+
     if not all_ok:
         sys.exit(1)
 
 
 def cmd_serve(args):
     """Start the memory server."""
+    if not require_ollama_client():
+        sys.exit(1)
+
     config = load_config()
     port = args.port or config.get("port", DEFAULT_PORT)
 
@@ -186,9 +234,13 @@ def cmd_serve(args):
 
     if args.background:
         proc = subprocess.Popen(server_args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if not wait_for_server(port, proc):
+            sys.exit(1)
         print(f"✅ zer0dex server started (PID {proc.pid}, port {port})")
     else:
-        subprocess.run(server_args)
+        result = subprocess.run(server_args)
+        if result.returncode:
+            sys.exit(result.returncode)
 
 
 def cmd_query(args):
@@ -256,7 +308,7 @@ def cmd_add(args):
 def main():
     parser = argparse.ArgumentParser(
         prog="zer0dex",
-        description="Dual-layer memory for AI agents. 91% recall, 70ms, $0/month.",
+        description="Local dual-layer memory for AI agents.",
     )
     sub = parser.add_subparsers(dest="command")
 

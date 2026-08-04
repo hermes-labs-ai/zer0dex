@@ -1,12 +1,13 @@
 """Tests for zer0dex seed — file collection and markdown chunking."""
 import sys
 from pathlib import Path
+from unittest.mock import MagicMock
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from zer0dex.seed import collect_files, chunk_markdown
+from zer0dex.seed import collect_files, chunk_markdown, get_all_for_user, search_for_user
 
 
 class TestCollectFiles:
@@ -92,3 +93,26 @@ class TestChunkMarkdown:
         text = "## Main\nContent\n### Sub\nMore content"
         chunks = chunk_markdown(text)
         assert len(chunks) == 1  # h3 should not cause a split
+
+
+class TestMem0ApiCompatibility:
+    def test_get_all_uses_current_filters_api(self):
+        memory = MagicMock()
+        memory.get_all.return_value = {"results": []}
+
+        assert get_all_for_user(memory, "agent") == {"results": []}
+        memory.get_all.assert_called_once_with(filters={"user_id": "agent"})
+
+    def test_search_uses_current_filters_api(self):
+        memory = MagicMock()
+        memory.search.return_value = {"results": []}
+
+        assert search_for_user(memory, "question", "agent", 5) == {"results": []}
+        memory.search.assert_called_once_with("question", filters={"user_id": "agent"}, top_k=5)
+
+    def test_get_all_falls_back_to_legacy_entity_argument(self):
+        memory = MagicMock()
+        memory.get_all.side_effect = [TypeError("unexpected filters"), {"results": []}]
+
+        assert get_all_for_user(memory, "agent") == {"results": []}
+        assert memory.get_all.call_args_list[1].kwargs == {"user_id": "agent"}
