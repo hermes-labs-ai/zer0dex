@@ -2,6 +2,24 @@
 
 All notable changes to zer0dex are documented here.
 
+## [0.0.10] - 2026-08-04
+
+### Changed
+- Improved the public README, package description, keywords, project links, and
+  Hermes Labs attribution so the local dual-layer memory pattern is easier to
+  understand and discover.
+- Added GitHub CI, contribution and security guidance, issue templates,
+  Dependabot configuration, and a pre-commit configuration.
+- Replaced private evaluation fixtures and workspace examples with synthetic
+  equivalents while preserving the public evaluation mechanics.
+- Added credential-free PyPI publishing through GitHub Actions trusted
+  publishing.
+
+### Evidence boundary
+- This release packages documentation, metadata, repository hygiene, and
+  privacy improvements already present on `main`. It does not change the core
+  memory runtime or extend the benchmark claims from 0.0.9.
+
 ## [0.0.9] - 2026-03-28
 
 ### Added
