@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "zer0dex: a human-readable memory index paired with local semantic retrieval for long-running agents"
+abstract: "zer0dex gives a long-running agent local recall without forcing every detail into its prompt by pairing a small, human-readable memory index with semantic retrieval from a local vector store. The markdown layer keeps categories, durable summaries, and cross-topic pointers; the local mem0/Chroma layer holds the retrievable details. The package supplies the CLI and local server; wiring the query into model calls remains an agent-host step."
+type: software
+authors:
+  - family-names: "Bosch Rodriguez"
+    given-names: "Rolando"
+    orcid: "https://orcid.org/0009-0005-4896-1112"
+    affiliation: "Hermes Labs"
+license: Apache-2.0
+repository-code: "https://github.com/hermes-labs-ai/zer0dex"
+version: "0.1.0"
+keywords:
+  - "agent memory"
+  - "semantic retrieval"
+  - "local vector store"
+  - "mem0"
+  - "ChromaDB"
