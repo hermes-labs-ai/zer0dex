@@ -148,5 +148,5 @@ Apache-2.0. zer0dex uses [mem0](https://mem0.ai/) for the memory abstraction,
 [Chroma](https://www.trychroma.com/) for local vector storage, and
 [Ollama](https://ollama.com/) for local embedding and extraction models.
 
-zer0dex is maintained by [Hermes Labs](https://hermes-labs.ai/), an independent
-AI reliability research lab.
+zer0dex is maintained by [Hermes Labs](https://hermes-labs.ai/), an AI reliability
+engineering studio for teams shipping production agents and LLM applications.
