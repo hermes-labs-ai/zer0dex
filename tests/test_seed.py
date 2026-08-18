@@ -1,12 +1,13 @@
 """Tests for zer0dex seed — file collection and markdown chunking."""
 import sys
 from pathlib import Path
+from unittest.mock import MagicMock
 
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from zer0dex.seed import collect_files, chunk_markdown
+from zer0dex.seed import collect_files, chunk_markdown, get_all_for_user, search_for_user
 
 
 class TestCollectFiles:
@@ -63,6 +64,11 @@ class TestChunkMarkdown:
         chunks = chunk_markdown(text)
         assert len(chunks) == 3  # title+intro, section A, section B
 
+    def test_does_not_emit_heading_only_preamble(self):
+        text = "# Memory\n\n## Project Atlas\nDeployment target: staging."
+        chunks = chunk_markdown(text)
+        assert chunks == [text]
+
     def test_no_empty_chunks(self):
         text = "\n\n\n## A\nstuff\n\n\n## B\nmore\n\n"
         chunks = chunk_markdown(text)
@@ -92,3 +98,44 @@ class TestChunkMarkdown:
         text = "## Main\nContent\n### Sub\nMore content"
         chunks = chunk_markdown(text)
         assert len(chunks) == 1  # h3 should not cause a split
+
+
+class TestMem0ApiCompatibility:
+    def test_get_all_uses_current_filters_api(self):
+        memory = MagicMock()
+        memory.get_all.return_value = {"results": []}
+
+        assert get_all_for_user(memory, "agent") == {"results": []}
+        memory.get_all.assert_called_once_with(
+            filters={"user_id": "agent"}, top_k=100
+        )
+
+    def test_get_all_expands_past_current_default_limit(self):
+        memory = MagicMock()
+        first_page = {"results": [{"memory": str(i)} for i in range(100)]}
+        complete = {"results": [{"memory": str(i)} for i in range(125)]}
+        memory.get_all.side_effect = [first_page, complete]
+
+        assert get_all_for_user(memory, "agent") == complete
+        assert memory.get_all.call_args_list[0].kwargs == {
+            "filters": {"user_id": "agent"},
+            "top_k": 100,
+        }
+        assert memory.get_all.call_args_list[1].kwargs == {
+            "filters": {"user_id": "agent"},
+            "top_k": 200,
+        }
+
+    def test_search_uses_current_filters_api(self):
+        memory = MagicMock()
+        memory.search.return_value = {"results": []}
+
+        assert search_for_user(memory, "question", "agent", 5) == {"results": []}
+        memory.search.assert_called_once_with("question", filters={"user_id": "agent"}, top_k=5)
+
+    def test_get_all_falls_back_to_legacy_entity_argument(self):
+        memory = MagicMock()
+        memory.get_all.side_effect = [TypeError("unexpected filters"), {"results": []}]
+
+        assert get_all_for_user(memory, "agent") == {"results": []}
+        assert memory.get_all.call_args_list[1].kwargs == {"user_id": "agent"}

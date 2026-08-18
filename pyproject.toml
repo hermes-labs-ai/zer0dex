@@ -1,7 +1,7 @@
 [project]
 name = "zer0dex"
-version = "0.0.9"
-description = "Local dual-layer memory for AI agents using a compressed index plus vector retrieval."
+version = "0.1.0"
+description = "Developer-preview local memory for AI agents: a readable index plus vector retrieval."
 readme = "README.md"
 license = {text = "Apache-2.0"}
 requires-python = ">=3.11"
@@ -18,7 +18,8 @@ classifiers = [
 ]
 dependencies = [
     "mem0ai>=0.1.0",
-    "chromadb>=1.0.0",
+    "chromadb>=1.5.9",
+    "ollama>=0.3.0",
 ]
 
 [project.optional-dependencies]
