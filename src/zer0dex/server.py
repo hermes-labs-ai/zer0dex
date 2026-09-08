@@ -86,7 +86,7 @@ class Mem0Handler(BaseHTTPRequestHandler):
         elif self.path == "/_lifecycle":
             token = self.headers.get("X-Zer0dex-Instance-Token", "")
             if not self.instance_token or not secrets.compare_digest(
-                token, self.instance_token
+                token.encode("utf-8"), self.instance_token.encode("utf-8")
             ):
                 self._send_json({"error": "not found"}, 404)
                 return

@@ -109,7 +109,7 @@ class TestHealthEndpoint:
         assert handler._response_code == 200
         assert handler._response_body == {"pid": 123}
 
-    @pytest.mark.parametrize("token", ["", "wrong-token"])
+    @pytest.mark.parametrize("token", ["", "wrong-token", "wrong-tökèn"])
     def test_lifecycle_rejects_missing_or_wrong_token(self, token):
         handler = make_handler("GET", "/_lifecycle")
         handler.instance_token = "launch-token"
