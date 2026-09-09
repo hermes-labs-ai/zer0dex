@@ -2,6 +2,34 @@
 
 All notable changes to zer0dex are documented here.
 
+## [0.1.1] - 2026-09-09
+
+### Added
+- `zer0dex stop` stops a background server that this project started. Lifecycle
+  state is persisted in the configured storage directory, and the command
+  signals a recorded PID only after the loopback server proves the matching
+  per-launch token and PID.
+
+### Fixed
+- A background start that never becomes ready is cleaned up instead of leaving
+  a half-started server behind. State that cannot be verified is preserved for
+  inspection rather than acted on, and repeating a successful `stop` is a
+  no-op.
+
+### Changed
+- Declared build metadata completed for PEP 639, `chromadb>=1.5.9` required,
+  the pinned development `pytest` raised to 9.1.1, and the checkout action
+  updated. Documentation links now point at the `v0.1.1` tag.
+
+### Compatibility
+- Additive within the 0.1.x developer-preview line: no existing command,
+  configuration key, or HTTP route changed shape.
+
+### Evidence boundary
+- This release ships the documented `stop` lifecycle command in an installable
+  artifact. It makes no hosted-operation, benchmark-generalization, adoption,
+  or production-readiness claim.
+
 ## [0.1.0] - 2026-08-04
 
 ### Changed
