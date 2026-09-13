@@ -85,6 +85,14 @@ The shortest host integration is an HTTP `POST /query` before each model call.
 Use the returned `memories` as additional context according to your own prompt
 and trust policy. The server also exposes `POST /add` and `GET /health`.
 
+For a TypeScript host, the repository includes a small adapter that adds a
+bounded, fail-open lookup before dispatching a model call:
+[hook_example.ts](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.1/src/zer0dex/hook_example.ts).
+Copy the `queryZer0dex` helper into your message pipeline and keep the returned
+memories in an explicitly untrusted context field. The example is deliberately
+an adapter rather than an automatic hook installer, so the host retains control
+over when retrieved text enters a prompt.
+
 Exact commands, options, response fields, errors, and compatibility promises
 live in the reference documentation:
 
