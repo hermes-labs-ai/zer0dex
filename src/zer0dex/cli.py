@@ -519,6 +519,18 @@ def cmd_add(args):
         result = json.loads(resp.read())
         count = result.get("count", 0)
         memories = result.get("memories", [])
+        if count == 0:
+            print("Error: zer0dex stored 0 memories for this text.")
+            print(
+                "This usually means the extraction model (mem0's LLM, "
+                f"default '{DEFAULT_LLM_MODEL}') judged the text to be a "
+                "duplicate of, or uninformative relative to, what is already "
+                "stored. Try: rephrasing the text with more specific facts, "
+                "running 'zer0dex query \"<related text>\"' to see what is "
+                "already known, or 'zer0dex check' to confirm the LLM and "
+                "embedding models are healthy."
+            )
+            sys.exit(1)
         print(f"✅ Added {count} memory(ies):")
         for m in memories:
             print(f"  • {m}")

@@ -390,3 +390,37 @@ class TestCliLocalServerExchange:
         assert "[0.910] Use concise factual replies." in output
         assert "Added 1 memory(ies)" in output
         assert "Memories: 2" in output
+
+    def test_add_with_zero_extracted_memories_exits_nonzero(self, capsys):
+        """Regression test: `zer0dex add` must not report success when the
+        extraction model stores nothing (e.g. duplicate/uninformative text).
+        Before the fix this printed 'Added 0 memory(ies)' and exited 0."""
+
+        class NoOpMemory:
+            def add(self, text, *, user_id):
+                assert user_id == "agent"
+                return {"results": []}
+
+        original_memory = Mem0Handler.memory
+        original_user_id = Mem0Handler.user_id
+        Mem0Handler.memory = NoOpMemory()
+        Mem0Handler.user_id = "agent"
+        server = HTTPServer(("127.0.0.1", 0), Mem0Handler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        port = server.server_port
+
+        try:
+            with pytest.raises(SystemExit) as exit_info:
+                cli.cmd_add(SimpleNamespace(text="already known fact", port=port))
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join()
+            Mem0Handler.memory = original_memory
+            Mem0Handler.user_id = original_user_id
+
+        assert exit_info.value.code != 0
+        output = capsys.readouterr().out
+        assert "Added 0 memory" not in output
+        assert "Error" in output
