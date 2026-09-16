@@ -9,13 +9,17 @@ requires-python = ">=3.11"
 authors = [
     {name = "Rolando Bosch"},
 ]
-keywords = ["agent-memory", "persistent-memory", "local-first", "rag", "memory", "vector-store"]
+keywords = ["agent-memory", "persistent-memory", "local-first", "rag", "memory", "vector-store", "mcp", "mem0", "chromadb", "ollama"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
 ]
 dependencies = [
     "mem0ai>=0.1.0",
@@ -32,6 +36,7 @@ Documentation = "https://github.com/hermes-labs-ai/zer0dex#readme"
 Repository = "https://github.com/hermes-labs-ai/zer0dex"
 Issues = "https://github.com/hermes-labs-ai/zer0dex/issues"
 Changelog = "https://github.com/hermes-labs-ai/zer0dex/blob/main/CHANGELOG.md"
+Source = "https://github.com/hermes-labs-ai/zer0dex"
 
 [project.scripts]
 zer0dex = "zer0dex.cli:main"
