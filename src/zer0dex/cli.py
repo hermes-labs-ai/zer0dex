@@ -519,6 +519,14 @@ def cmd_add(args):
         result = json.loads(resp.read())
         count = result.get("count", 0)
         memories = result.get("memories", [])
+        if count == 0:
+            print(
+                "Error: no memory was stored. The extraction model judged this text as "
+                "already covered by existing memories (or not extractable as a new fact). "
+                "Try rephrasing with more specific or clearly novel information, or check "
+                "with 'zer0dex query' whether it is already known."
+            )
+            sys.exit(1)
         print(f"✅ Added {count} memory(ies):")
         for m in memories:
             print(f"  • {m}")

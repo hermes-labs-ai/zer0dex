@@ -390,3 +390,43 @@ class TestCliLocalServerExchange:
         assert "[0.910] Use concise factual replies." in output
         assert "Added 1 memory(ies)" in output
         assert "Memories: 2" in output
+
+
+class TestCliAddZeroCount:
+    def test_add_with_zero_count_fails_loudly(self, capsys):
+        """A server response of count:0 (e.g. mem0 judged the text as no new
+        fact / duplicate) must not print a success checkmark with exit 0 —
+        that silently discards the user's input while claiming success.
+        Reproduces the exact defect from zer0dex's own README first-run walkthrough."""
+        class ZeroCountMemory:
+            def get_all(self, *, filters, top_k):
+                return {"results": []}
+
+            def add(self, text, *, user_id):
+                # Simulates mem0's extraction LLM deciding there is nothing
+                # new to store (duplicate or unextractable fact).
+                return {"results": []}
+
+        original_memory = Mem0Handler.memory
+        original_user_id = Mem0Handler.user_id
+        Mem0Handler.memory = ZeroCountMemory()
+        Mem0Handler.user_id = "agent"
+        server = HTTPServer(("127.0.0.1", 0), Mem0Handler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        port = server.server_port
+
+        try:
+            with pytest.raises(SystemExit) as excinfo:
+                cli.cmd_add(SimpleNamespace(text="Already known fact.", port=port))
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join()
+            Mem0Handler.memory = original_memory
+            Mem0Handler.user_id = original_user_id
+
+        assert excinfo.value.code != 0
+        output = capsys.readouterr().out
+        assert "Added 0 memory(ies)" not in output
+        assert "Error" in output

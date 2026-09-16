@@ -110,7 +110,7 @@ zer0dex init
 zer0dex seed --source MEMORY.md
 zer0dex serve --background
 zer0dex query "Where does Project Atlas deploy?"
-zer0dex add "Project Atlas deploys from the release branch"
+zer0dex add "Project Atlas' on-call owner is Priya starting next sprint"
 zer0dex status
 zer0dex stop
 ```
