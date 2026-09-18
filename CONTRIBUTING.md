@@ -20,7 +20,7 @@ pytest tests/ -v
 
 1. Fork the repo and create a branch from `main`
 2. Write tests for your changes
-3. Run `pytest tests/ -v` — all 37 tests must pass
+3. Run `pytest tests/ -v` — all 71 tests must pass
 4. Submit a pull request
 
 ## Code Style

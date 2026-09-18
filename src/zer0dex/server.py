@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 zer0dex Memory Server
-Keeps mem0 loaded in memory, responds to queries in ~70ms avg.
+Keeps mem0 loaded in memory so queries skip cold-start model loading.
 
 Endpoints:
   POST /query  {"text": "...", "limit": 5}  → {"memories": [...]}
