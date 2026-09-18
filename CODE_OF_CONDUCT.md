@@ -24,7 +24,7 @@ Examples of unacceptable behavior:
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project maintainers at rbosch@hermes-labs.ai.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project maintainers at roli@hermes-labs.ai.
 
 ## Attribution
 
