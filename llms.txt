@@ -1,6 +1,6 @@
 # zer0dex
 
-Local dual-layer memory architecture for AI agents. Version 0.1.0 is the first
+Local dual-layer memory architecture for AI agents. Version 0.1.1 is the first
 supported developer-preview compatibility line; the package remains Alpha.
 
 Use this repo when you need to:

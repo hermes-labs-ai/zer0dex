@@ -30,6 +30,7 @@ store.
 ## Commands
 
 ```bash
+zer0dex --version
 zer0dex init [--collection NAME] [--chroma-path PATH] [--port PORT] [--user-id ID]
 zer0dex seed --source FILE_OR_DIRECTORY [--source MORE] [--dry-run]
 zer0dex serve [--port PORT] [--background]
@@ -39,6 +40,8 @@ zer0dex query TEXT [--limit N] [--port PORT]
 zer0dex add TEXT [--port PORT]
 ```
 
+- `--version` prints the installed package version (sourced from package
+  metadata) and exits 0. It performs no server, store, or network access.
 - `init` writes configuration and creates its storage directory. It exits 0 on
   success. It intentionally does not start Ollama; run `check` before the
   first real seed or server start.

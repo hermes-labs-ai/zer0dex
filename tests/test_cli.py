@@ -78,6 +78,23 @@ class TestCLIParsing:
         for cmd in ["check", "init", "seed", "serve", "stop", "query", "status", "add"]:
             assert cmd in result.stdout, f"Missing command: {cmd}"
 
+    def test_version_flag_exits_zero_and_matches_package_metadata(self):
+        from importlib.metadata import PackageNotFoundError
+        from importlib.metadata import version as pkg_version
+
+        result = subprocess.run(
+            [sys.executable, "-m", "zer0dex.cli", "--version"],
+            capture_output=True, text=True,
+            cwd=str(Path(__file__).resolve().parent.parent),
+            env={**__import__("os").environ, "PYTHONPATH": str(Path(__file__).resolve().parent.parent / "src")},
+        )
+        assert result.returncode == 0
+        try:
+            expected = pkg_version("zer0dex")
+        except PackageNotFoundError:
+            expected = "unknown"
+        assert result.stdout.strip() == f"zer0dex {expected}"
+
 
 class TestInit:
     def test_init_creates_config_and_dir(self, tmp_workdir):

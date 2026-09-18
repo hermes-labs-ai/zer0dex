@@ -23,7 +23,13 @@ import tempfile
 import time
 import urllib.request
 import urllib.error
+from importlib.metadata import PackageNotFoundError, version as _pkg_version
 from pathlib import Path
+
+try:
+    __version__ = _pkg_version("zer0dex")
+except PackageNotFoundError:
+    __version__ = "unknown"
 
 
 DEFAULT_PORT = 18420
@@ -543,6 +549,11 @@ def main():
     parser = argparse.ArgumentParser(
         prog="zer0dex",
         description="Local dual-layer memory for AI agents.",
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"zer0dex {__version__}",
     )
     sub = parser.add_subparsers(dest="command")
 

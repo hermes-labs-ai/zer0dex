@@ -100,6 +100,7 @@ default path requires no hosted memory service or cloud API key.
 python -m venv .venv
 source .venv/bin/activate
 pip install zer0dex
+zer0dex --version
 
 ollama pull nomic-embed-text
 ollama pull mistral:7b
