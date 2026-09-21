@@ -4,6 +4,10 @@ Give a long-running agent local recall without forcing every detail into its
 prompt: `zer0dex` pairs a small, human-readable memory index with semantic
 retrieval from a local vector store.
 
+zer0dex is developed by [Hermes Labs](https://hermes-labs.ai).
+
+Hermes Labs studies failure modes in agent and LLM systems, develops open-source tools that treat language as part of the runtime, and works with teams to remediate reliability failures in production.
+
 [![PyPI version](https://img.shields.io/pypi/v/zer0dex)](https://pypi.org/project/zer0dex/)
 [![Python](https://img.shields.io/pypi/pyversions/zer0dex)](https://pypi.org/project/zer0dex/)
 [![CI](https://github.com/hermes-labs-ai/zer0dex/actions/workflows/ci.yml/badge.svg)](https://github.com/hermes-labs-ai/zer0dex/actions/workflows/ci.yml)
@@ -205,9 +209,6 @@ for release history.
 Apache-2.0. zer0dex uses [mem0](https://mem0.ai/) for the memory abstraction,
 [Chroma](https://www.trychroma.com/) for local vector storage, and
 [Ollama](https://ollama.com/) for local embedding and extraction models.
-
-zer0dex is maintained by [Hermes Labs](https://hermes-labs.ai/), an AI reliability
-engineering studio for teams shipping production agents and LLM applications.
 
 ## Also from Hermes Labs
 

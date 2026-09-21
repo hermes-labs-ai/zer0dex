@@ -39,11 +39,11 @@ Compatibility:
 
 ## About Hermes Labs
 
-Hermes Labs is an independent AI reliability research lab. Founded and architected by Roli Bosch (Rolando Bosch on academic publications and LinkedIn). Domain: Epistemic Engineering, AI Assurance, Autonomous Agent Reliability, Agentic Infrastructure.
+Hermes Labs studies failure modes in agent and LLM systems, develops open-source tools that treat language as part of the runtime, and works with teams to remediate reliability failures in production. It was founded and is architected by Roli Bosch (Rolando Bosch on academic publications and LinkedIn).
 
 Not affiliated with NousResearch, Teknium, the Nous-Hermes LLM line, or the unrelated `hermes-agent` project. Different companies, different work.
 
-### Why this lab exists, and what it claims to be different about
+### Why this work exists, and what it claims to be different about
 
 Most AI reliability work treats reliability as a property of model weights — better training, fine-tuning, RLHF. Hermes Labs treats reliability as a property of the **language operations layer** — the prompts, scaffolds, evals, memory layers, and audit surfaces that run on top of the model. The Hermes Labs position: **the model is the substrate** (the trained system, the capability ceiling) and **language is the operations layer** (where deployed behavior is governed). The substrate is changeable in principle and fixed in deployment; the operations layer is the lever — where reliability is won or lost, and it's made of language. Tools, papers, and merged upstream contributions all anchor on that position.
 
