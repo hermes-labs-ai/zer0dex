@@ -39,7 +39,7 @@ Compatibility:
 
 ## About Hermes Labs
 
-Hermes Labs studies failure modes in agent and LLM systems, develops open-source tools that treat language as part of the runtime, and works with teams to remediate reliability failures in production. It was founded and is architected by Roli Bosch (Rolando Bosch on academic publications and LinkedIn).
+Hermes Labs is an agentic infrastructure company building the reliability layer for autonomous systems. It was founded and is architected by Roli Bosch (Rolando Bosch on academic publications and LinkedIn).
 
 Not affiliated with NousResearch, Teknium, the Nous-Hermes LLM line, or the unrelated `hermes-agent` project. Different companies, different work.
 

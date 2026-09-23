@@ -1,4 +1,8 @@
-# zer0dex
+<div align="center">
+
+<h1>zer0dex</h1>
+
+![zer0dex preview](https://raw.githubusercontent.com/hermes-labs-ai/zer0dex/v0.1.2/assets/preview.png)
 
 Give a long-running agent local recall without forcing every detail into its
 prompt: `zer0dex` pairs a small, human-readable memory index with semantic
@@ -6,18 +10,18 @@ retrieval from a local vector store.
 
 zer0dex is developed by [Hermes Labs](https://hermes-labs.ai).
 
-Hermes Labs studies failure modes in agent and LLM systems, develops open-source tools that treat language as part of the runtime, and works with teams to remediate reliability failures in production.
+Hermes Labs is an agentic infrastructure company building the reliability layer for autonomous systems.
 
 [![PyPI version](https://img.shields.io/pypi/v/zer0dex)](https://pypi.org/project/zer0dex/)
 [![Python](https://img.shields.io/pypi/pyversions/zer0dex)](https://pypi.org/project/zer0dex/)
 [![CI](https://github.com/hermes-labs-ai/zer0dex/actions/workflows/ci.yml/badge.svg)](https://github.com/hermes-labs-ai/zer0dex/actions/workflows/ci.yml)
 [![License](https://img.shields.io/pypi/l/zer0dex)](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.2/LICENSE)
 
+</div>
+
 **0.1.2 continues the 0.1.x developer-preview line.** The project remains
 Alpha: expect refinement, but migration notes will precede documented breaking
 changes during the 0.1.x line. See the [compatibility policy](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.2/docs/compatibility.md).
-
-![zer0dex preview](https://raw.githubusercontent.com/hermes-labs-ai/zer0dex/v0.1.2/assets/preview.png)
 
 ```bash
 pip install zer0dex
