@@ -1,4 +1,4 @@
-"""Lightweight check that machine-readable docs agree with pyproject.toml on version."""
+"""Lightweight checks that machine-readable docs agree with pyproject.toml."""
 import re
 import tomllib
 from pathlib import Path
@@ -9,6 +9,11 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 def _pyproject_version() -> str:
     data = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text())
     return data["project"]["version"]
+
+
+def _pyproject_license() -> str:
+    data = tomllib.loads((REPO_ROOT / "pyproject.toml").read_text())
+    return data["project"]["license"]
 
 
 def test_llms_txt_version_matches_pyproject():
@@ -37,3 +42,20 @@ def test_runtime_and_citation_versions_match_pyproject():
 
     assert re.search(rf'^__version__ = "{re.escape(pyproject_version)}"$', init_text, re.M)
     assert re.search(rf'^version: "{re.escape(pyproject_version)}"$', citation_text, re.M)
+
+
+def test_project_license_metadata_matches_pyproject():
+    import json
+
+    license_id = _pyproject_license()
+    assert license_id == "Apache-2.0"
+
+    skill_text = (REPO_ROOT / ".agents" / "skills" / "zer0dex" / "SKILL.md").read_text()
+    citation_text = (REPO_ROOT / "CITATION.cff").read_text()
+    readme_text = (REPO_ROOT / "README.md").read_text()
+    codemeta = json.loads((REPO_ROOT / "codemeta.json").read_text())
+
+    assert re.search(r"^license: (\S+)$", skill_text, re.M).group(1) == license_id
+    assert re.search(r"^license: (\S+)$", citation_text, re.M).group(1) == license_id
+    assert codemeta["license"] == f"https://spdx.org/licenses/{license_id}"
+    assert re.search(rf"^{re.escape(license_id)}\.", readme_text, re.M)

@@ -1,7 +1,7 @@
 ---
 name: zer0dex
 description: Use when you need a local dual-layer memory pattern for an AI agent — a compressed markdown index for cross-reference queries plus a local vector store queried before each model call — and want a reference implementation to seed and query without a hosted service. Local-first, Alpha.
-license: MIT
+license: Apache-2.0
 compatibility: Requires Python 3.10+ and a local Ollama instance with an embedding model; installs via `pip install zer0dex` or runs standalone via `uvx zer0dex`. No hosted service required.
 ---
 
