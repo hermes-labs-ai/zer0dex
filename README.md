@@ -2,7 +2,10 @@
 
 <h1>zer0dex</h1>
 
-![zer0dex preview](https://raw.githubusercontent.com/hermes-labs-ai/zer0dex/v0.1.2/assets/preview.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/zer0dex-hero-dark.png">
+  <img src="assets/zer0dex-hero-light.png" alt="zer0dex preview">
+</picture>
 
 Give a long-running agent local recall without forcing every detail into its
 prompt: `zer0dex` pairs a small, human-readable memory index with semantic
