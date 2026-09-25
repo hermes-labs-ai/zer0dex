@@ -3,8 +3,9 @@
 <h1>zer0dex</h1>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/zer0dex-hero-dark.svg">
-  <img src="assets/zer0dex-hero-light.svg" alt="zer0dex preview">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/zer0dex-hero-white-background.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/zer0dex-hero-black-background.jpg">
+  <img src="assets/zer0dex-hero-black-background.jpg" alt="zer0dex logo lockup" width="100%">
 </picture>
 
 Give a long-running agent local recall without forcing every detail into its
