@@ -25,6 +25,7 @@ Your agent knows the project name, but the deployment decision it needs is burie
 Requires Python 3.11 or 3.12 and [Ollama](https://ollama.com/) running on your machine. Start Ollama first if it is not already serving at `http://localhost:11434`.
 
 ```bash
+mkdir zer0dex-demo && cd zer0dex-demo
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install zer0dex
