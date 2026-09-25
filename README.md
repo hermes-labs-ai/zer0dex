@@ -1,226 +1,69 @@
 <div align="center">
 
-<h1>zer0dex</h1>
-
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/zer0dex-hero-white-background.jpg">
   <source media="(prefers-color-scheme: light)" srcset="assets/zer0dex-hero-black-background.jpg">
-  <img src="assets/zer0dex-hero-black-background.jpg" alt="zer0dex logo lockup" width="100%">
+  <img src="assets/zer0dex-hero-black-background.jpg" alt="zer0dex by Hermes Labs" width="100%">
 </picture>
 
-Give a long-running agent local recall without forcing every detail into its
-prompt: `zer0dex` pairs a small, human-readable memory index with semantic
-retrieval from a local vector store.
+# zer0dex
 
-zer0dex is developed by [Hermes Labs](https://hermes-labs.ai).
+**Give an agent long-term recall without loading every note into its prompt.**
 
-Hermes Labs is an agentic infrastructure company building the reliability layer for autonomous systems.
+A readable Markdown index shows what the agent knows. A local vector store retrieves the details when they matter.
 
-[![PyPI version](https://img.shields.io/pypi/v/zer0dex)](https://pypi.org/project/zer0dex/)
-[![Python](https://img.shields.io/pypi/pyversions/zer0dex)](https://pypi.org/project/zer0dex/)
-[![CI](https://github.com/hermes-labs-ai/zer0dex/actions/workflows/ci.yml/badge.svg)](https://github.com/hermes-labs-ai/zer0dex/actions/workflows/ci.yml)
-[![License](https://img.shields.io/pypi/l/zer0dex)](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.2/LICENSE)
+by [Hermes Labs](https://hermes-labs.ai)
+
+[PyPI](https://pypi.org/project/zer0dex/) · [CLI reference](docs/cli.md) · [HTTP API](docs/http.md)
 
 </div>
 
-**0.1.2 continues the 0.1.x developer-preview line.** The project remains
-Alpha: expect refinement, but migration notes will precede documented breaking
-changes during the 0.1.x line. See the [compatibility policy](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.2/docs/compatibility.md).
+Your agent knows the project name, but the deployment decision it needs is buried in months of notes. Putting the entire archive in its context is expensive and hard to navigate; a vector store alone gives you no simple map of what's in it. zer0dex pairs a short index you can read and edit with semantic search over the underlying memories.
+
+## Try it locally
+
+Requires Python 3.11 or 3.12 and [Ollama](https://ollama.com/) running on your machine. Start Ollama first if it is not already serving at `http://localhost:11434`.
 
 ```bash
-pip install zer0dex
-```
-
-That installs the CLI and local server. [First success](#first-success) below
-walks through the Ollama models and commands a working setup needs; the
-[CLI](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.2/docs/cli.md) and
-[HTTP API](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.2/docs/http.md)
-references cover every command and endpoint.
-
-## Quicklook (no Ollama required)
-
-[First success](#first-success) needs Ollama and two local models. Before
-installing those, here is what the two layers look like without running
-anything.
-
-A `zer0dex` memory index is a plain markdown file you write or edit by hand:
-
-```markdown
-# Memory
-## Project Atlas
-- Deployment target: staging
-- Owner: platform-team
-- Last incident: 2026-08-02, rolled back within 12m
-```
-
-Example output (illustrative, no Ollama required to read this — shape of a
-`zer0dex query` response once the local server and models from
-[First success](#first-success) are running):
-
-```
-$ zer0dex query "Where does Project Atlas deploy?"
-{
-  "memories": [
-    {
-      "text": "Deployment target: staging",
-      "score": 0.87,
-      "source": "MEMORY.md#project-atlas"
-    }
-  ]
-}
-```
-
-## Who needs it
-
-`zer0dex` is for agent and framework developers who:
-
-- run agents locally and need memory to persist across sessions;
-- want a compact index that people can inspect and edit;
-- need semantic retrieval for details that do not fit in that index; and
-- can add one local HTTP lookup before a model call.
-
-It is especially useful when a flat `MEMORY.md` has become too large, while a
-vector store alone makes it hard to see what knowledge exists or how topics
-relate.
-
-## Why two layers
-
-The markdown layer is a semantic table of contents: keep categories, durable
-summaries, and cross-topic pointers there. The local mem0/Chroma layer holds the
-retrievable details. Your agent host keeps the index in context and queries the
-HTTP server for the current message, then decides how to inject the returned
-matches.
-
-The package supplies the CLI and local server. It does not install or run a
-pre-message hook; wiring the query into model calls remains an agent-host step.
-
-## First success
-
-Requirements and tested support:
-
-- Python 3.11 or 3.12 (the package declares Python 3.11+; later versions are
-  not yet covered by CI);
-- [Ollama](https://ollama.com/) installed and serving locally at
-  `http://localhost:11434`;
-- the local `nomic-embed-text` and `mistral:7b` Ollama models; and
-- enough local memory and disk for those models and the Chroma store.
-
-The package install includes mem0ai, ChromaDB, and the Ollama Python client. The
-default path requires no hosted memory service or cloud API key.
-
-```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
-pip install zer0dex
-zer0dex --version
-
+python -m pip install zer0dex
 ollama pull nomic-embed-text
 ollama pull mistral:7b
 
-printf '%s\n' '# Memory' '## Project Atlas' '- Deployment target: staging' > MEMORY.md
+printf '# Memory\n## Project Atlas\n- Deployment target: staging\n' > MEMORY.md
 zer0dex check
 zer0dex init
 zer0dex seed --source MEMORY.md
 zer0dex serve --background
 zer0dex query "Where does Project Atlas deploy?"
-zer0dex add "Project Atlas deploys from the release branch"
-zer0dex status
-zer0dex stop
 ```
 
-This creates `.zer0dex.json` and a local `.zer0dex/` store in the working
-directory. Background starts also record their project-local process state as
-`server.json` in the configured storage directory; use `zer0dex stop` to stop
-that managed server. It will refuse to signal a PID unless the server proves
-its per-launch identity, so stale or reused state cannot stop an unrelated
-process. `zer0dex add` exits nonzero when extraction stores no memories and
-suggests checking, querying, or rephrasing the text rather than reporting a
-successful add.
+The last command returns matching stored memories if extraction and retrieval succeeded. Run `zer0dex stop` when finished. The configuration and store live in the current directory (`.zer0dex.json` and `.zer0dex/`); use a disposable directory for a trial. If `check` fails, confirm that Ollama is running and both models were pulled before seeding.
 
-## Integration surface
+## How the two layers work
 
-The shortest host integration is an HTTP `POST /query` before each model call.
-Use the returned `memories` as additional context according to your own prompt
-and trust policy. The server also exposes `POST /add` and `GET /health`.
+| Layer | What it gives you |
+| --- | --- |
+| Markdown index | A compact, human-editable map of projects, categories, and durable pointers. Keep this in the agent's context. |
+| Local memory store | The fuller details, retrieved by meaning when the agent needs them. |
 
-For a TypeScript host, the repository includes a small adapter that adds a
-bounded, fail-open lookup before dispatching a model call:
-[hook_example.ts](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.2/src/zer0dex/hook_example.ts).
-Copy the `queryZer0dex` helper into your message pipeline and keep the returned
-memories in an explicitly untrusted context field. The example is deliberately
-an adapter rather than an automatic hook installer, so the host retains control
-over when retrieved text enters a prompt.
+The CLI can seed memories from Markdown, add more text, and query a loopback HTTP server. Your agent host calls `POST /query` before a model request and decides which matches to include. **zer0dex supplies the server and CLI; it does not install an automatic hook into your agent.** A small [TypeScript host adapter](src/zer0dex/hook_example.ts) shows that integration point.
 
-Exact commands, options, response fields, errors, and compatibility promises
-live in the reference documentation:
+The default path uses local Ollama models for embeddings and memory extraction, with mem0 and Chroma for storage. You can inspect the index directly and keep the retrieval store on your machine.
 
-- [CLI reference](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.2/docs/cli.md)
-- [HTTP API reference](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.2/docs/http.md)
-- [Compatibility and migration policy](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.2/docs/compatibility.md)
-- [Evaluation methodology, results, and limitations](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.2/eval/README.md)
+## When to use it
 
-## Evidence and limits
+zer0dex is a fit for developers building a local, long-running agent whose notes have outgrown one `MEMORY.md`, but who still want a readable map of what was saved. It is a reference implementation of this two-layer pattern, currently in the 0.1.x developer-preview line. The package is not a hosted team service or a complete agent framework.
 
-The bundled evaluation compares a compressed index, vector retrieval, and the
-dual-layer combination on one 86-memory, 97-case workload. In that workload,
-zer0dex reached 91.2% average recall and 80.0% cross-reference recall.
+In the [bundled 86-memory, 97-case evaluation](eval/README.md), the combined approach reached 91.2% average recall and 80.0% cross-reference recall. This is one test workload; try your own notes and queries before choosing a retrieval strategy.
 
-Those figures are workload evidence, not a general performance guarantee. The
-evaluation uses one memory store, cases derived from that store, a single-run
-score without confidence intervals, and hardware-specific latency. It does not
-establish behavior at thousands of memories, across domains, or inside your
-agent's prompt and tool stack. Re-run the evaluation on representative data
-before choosing thresholds or making production claims.
+## Go further
 
-## Non-goals
+- [CLI commands and defaults](docs/cli.md)
+- [HTTP endpoints and response fields](docs/http.md)
+- [Compatibility and migration policy](docs/compatibility.md)
+- [Evaluation and methodology](eval/README.md)
+- [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
 
-zer0dex is not:
-
-- hosted memory infrastructure or a multi-tenant service;
-- a complete agent framework or automatic hook installer;
-- a compliance, access-control, privacy, or governance system;
-- a guarantee that retrieved text is true, safe, or appropriate to inject; or
-- evidence that the bundled benchmark transfers unchanged to another workload.
-
-Treat source documents and retrieved memories as data with the same sensitivity
-and trust boundaries you apply elsewhere in your agent.
-
-## Development
-
-```bash
-git clone https://github.com/hermes-labs-ai/zer0dex.git
-cd zer0dex
-python -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
-python -m pytest tests/ -q
-```
-
-See [CONTRIBUTING.md](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.2/CONTRIBUTING.md)
-for contribution guidance and the
-[changelog](https://github.com/hermes-labs-ai/zer0dex/blob/v0.1.2/CHANGELOG.md)
-for release history.
-
-## Citation
-
-```bibtex
-@misc{bosch2026zer0dex,
-  title={zer0dex: Dual-Layer Memory Architecture for Persistent AI Agents},
-  author={Bosch, Rolando},
-  year={2026},
-  url={https://github.com/hermes-labs-ai/zer0dex}
-}
-```
-
-## License and credits
-
-Apache-2.0. zer0dex uses [mem0](https://mem0.ai/) for the memory abstraction,
-[Chroma](https://www.trychroma.com/) for local vector storage, and
-[Ollama](https://ollama.com/) for local embedding and extraction models.
-
-## Also from Hermes Labs
-
-- [lintlang](https://github.com/hermes-labs-ai/lintlang) — Static analysis for AI agent configs, tool descriptions, and system prompts; catches vague tool descriptions, missing stop conditions, and schema gaps before they reach runtime.
-- [little-canary](https://github.com/hermes-labs-ai/little-canary) — Detects prompt injection by its effect on a sacrificial canary model, not just pattern matching.
-- [fidelis](https://github.com/hermes-labs-ai/fidelis) — Zero-LLM agent memory for Claude Code and AI agents: local-first BM25, dense-vector, and reciprocal-rank-fusion retrieval.
-- [quick-gate-js](https://github.com/hermes-labs-ai/quick-gate-js) — Deterministic JS/TS CI quality gate that unifies ESLint, TypeScript, build, and Lighthouse checks into one fail-fast result.
+Apache-2.0. [Hermes Labs](https://hermes-labs.ai) builds agentic infrastructure for autonomous systems.
