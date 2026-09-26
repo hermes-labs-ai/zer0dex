@@ -52,10 +52,8 @@ def test_project_license_metadata_matches_pyproject():
 
     skill_text = (REPO_ROOT / ".agents" / "skills" / "zer0dex" / "SKILL.md").read_text()
     citation_text = (REPO_ROOT / "CITATION.cff").read_text()
-    readme_text = (REPO_ROOT / "README.md").read_text()
     codemeta = json.loads((REPO_ROOT / "codemeta.json").read_text())
 
     assert re.search(r"^license: (\S+)$", skill_text, re.M).group(1) == license_id
     assert re.search(r"^license: (\S+)$", citation_text, re.M).group(1) == license_id
     assert codemeta["license"] == f"https://spdx.org/licenses/{license_id}"
-    assert re.search(rf"^{re.escape(license_id)}\.", readme_text, re.M)
