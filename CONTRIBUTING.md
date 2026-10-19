@@ -14,7 +14,7 @@ pytest tests/ -v
 ## Requirements
 
 - Python 3.11+
-- [Ollama](https://ollama.ai) with `nomic-embed-text` and `mistral:7b` (for integration testing)
+- [Ollama](https://ollama.com/) with `nomic-embed-text` and `mistral:7b` (for integration testing)
 
 ## Making Changes
 
